@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <cuda.h>
 #include <stdlib.h>
 #include <time.h>
 #include "cuda_functions.cuh"
@@ -129,13 +128,13 @@ int main(int argc, char *argv[])
 
     // Allocate memory for matrices [GPU]
     size = rows * columns * sizeof(int);
-    cudaMalloc((void **)&d_A, size);
-    cudaMalloc((void **)&d_B, size);
-    cudaMalloc((void **)&d_C, size);
+    CudaMalloc((void **)&d_A, size);
+    CudaMalloc((void **)&d_B, size);
+    CudaMalloc((void **)&d_C, size);
 
     // Copy matrices from CPU to GPU
-    cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
+    CudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
+    CudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
 
     // Define grid and block dimensions
     dim3 threadsPerBlock(threads, threads);
@@ -143,35 +142,35 @@ int main(int argc, char *argv[])
                    (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);
 
     // Create CUDA events for timing
-    cudaEventCreate(&start);
-    cudaEventCreate(&end);
+    CudaEventCreate(&start);
+    CudaEventCreate(&end);
 
     // Multiply matrices on GPU measuring time
-    cudaEventRecord(start);
+    CudaEventRecord(start, 0);
     mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, rows, columns);
-    cudaEventRecord(end);
+    CudaEventRecord(end, 0);
 
     // Synchronize and calculate elapsed time
-    cudaEventSynchronize(end);
-    cudaEventElapsedTime(&ms, start, end);
+    CudaEventSynchronize(end);
+    CudaEventElapsedTime(&ms, start, end);
 
     // Copy result matrix from GPU to CPU
-    cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
+    CudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
 
     // Print elapsed time
     printf("Time (milliseconds): %.5f\n", ms);
 
     // Free device memory
-    cudaFree(d_A);
-    cudaFree(d_B);
-    cudaFree(d_C);
+    CudaFree(d_A);
+    CudaFree(d_B);
+    CudaFree(d_C);
     free(A);
     free(B);
     free(C);
 
     // Destroy CUDA events
-    cudaEventDestroy(start);
-    cudaEventDestroy(end);
+    CudaEventDestroy(start);
+    CudaEventDestroy(end);
 
     return 0;
 }
