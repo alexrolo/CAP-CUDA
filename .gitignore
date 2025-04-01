@@ -564,4 +564,4 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/c,cuda,visualstudiocode,python,latex
 
 **/multiply_matrices_cuda
-**/equations
+**/equations/equations
