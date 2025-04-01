@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/alex/Documents/EPI/master/CAP/S3/equations",
+            "binaryPath": "/home/alex/Documents/EPI/master/CAP/S3/equations/equations",
+            "binaryArgs": []
+        }
+    ]
+}

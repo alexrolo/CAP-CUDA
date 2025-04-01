@@ -1,8 +1,8 @@
 #include "functions.h"
 
-float **allocate_matrix(int size)
+double **allocate_matrix(int size)
 {
-    float **matrix = (float **)malloc(size * sizeof(float *));
+    double **matrix = (double **)malloc(size * sizeof(double *));
     if (matrix == NULL)
     {
         fprintf(stderr, "Error: Unable to allocate memory for rows.\n");
@@ -11,7 +11,7 @@ float **allocate_matrix(int size)
 
     for (int i = 0; i < size; i++)
     {
-        matrix[i] = (float *)malloc((size + 1) * sizeof(float)); // IMPORTANTE: N+1 columnas
+        matrix[i] = (double *)malloc((size + 1) * sizeof(double)); // IMPORTANTE: N+1 columnas
         if (matrix[i] == NULL)
         {
             fprintf(stderr, "Error: Could not allocate memory for row %d.\n", i);
@@ -22,27 +22,27 @@ float **allocate_matrix(int size)
     return matrix;
 }
 
-void free_matrix(int m, float **matrix)
+void free_matrix(int m, double **matrix)
 {
     for (int i = 0; i < m; i++)
         free(matrix[i]);
     free(matrix);
 }
 
-void generate_matrix(int size, float **matrix)
+void generate_matrix(int size, double **matrix)
 {
     for (int i = 0; i < size; i++)
         for (int j = 0; j <= size; j++)
             matrix[i][j] = (rand() % 10) + 1; // Generate numbers between 0 and 9
 }
 
-void print_equation_system(int size, float **mat)
+void print_equation_system(int size, double **mat)
 {
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
         { // Not including the independent column
-            printf("%5.1f x%d  ", mat[i][j], j);
+            printf("%5.4f x%d  ", mat[i][j], j);
             if (j < size - 1)
                 printf("+ ");
         }
@@ -51,15 +51,23 @@ void print_equation_system(int size, float **mat)
     printf("\n");
 }
 
-int check_equation_system(int size, float **mat, float *sol)
+int check_equation_system(int size, double **mat, double *sol)
 {
     for (int i = 0; i < size; i++)
     {
-        float sum = 0;
+        double sum = 0;
         for (int j = 0; j < size; j++)
             sum += mat[i][j] * sol[j];
         if (fabs(sum - mat[i][size]) > 1e-6) // Check if the absolute difference is small
             return 0; // Solution is incorrect
     }
     return 1; // Solution is correct
+}
+
+void copy_matrix(int size, double **src, double **dest)
+{
+    dest = allocate_matrix(size);
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j <= size; j++)
+            dest[i][j] = src[i][j];
 }

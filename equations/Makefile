@@ -1,10 +1,13 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address -fsanitize=undefined -Wshadow
 
-equations : 3-equations.c functions.o
-	$(CC) $(CFLAGS) -o $@ $< functions.o
+equations : 3-equations.c functions.o gauss_jordan.o
+	$(CC) $(CFLAGS) -o $@ $< functions.o gauss_jordan.o
 
 functions.o : functions.c functions.h
+	$(CC) $(CFLAGS) -c $<
+
+gauss_jordan.o : gauss_jordan.c gauss_jordan.h
 	$(CC) $(CFLAGS) -c $<
 
 clean:
