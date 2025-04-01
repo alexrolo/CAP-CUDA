@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
     // Multiply matrices on GPU measuring time
     CudaEventRecord(start, 0);
     mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, rows, columns);
+    CudaDeviceSynchronize();
     CudaEventRecord(end, 0);
 
     // Synchronize and calculate elapsed time

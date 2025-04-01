@@ -9,5 +9,6 @@ void CudaMemcpy(void *dst, const void *src, size_t count, cudaMemcpyKind kind);
 void CudaEventRecord(cudaEvent_t event, cudaStream_t stream);
 void CudaEventSynchronize(cudaEvent_t event);
 void CudaEventElapsedTime(float *ms, cudaEvent_t start, cudaEvent_t end);
+void CudaDeviceSynchronize();
 
 #endif

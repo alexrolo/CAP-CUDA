@@ -123,3 +123,16 @@ void CudaEventElapsedTime(float *ms, cudaEvent_t start, cudaEvent_t end)
     }
 }
 
+/**
+ * cudaDeviceSynchronize function with error handling
+ */
+void CudaDeviceSynchronize()
+{
+    cudaError_t err = cudaDeviceSynchronize();
+    if (err != cudaSuccess)
+    {
+        fprintf(stderr, "Error: Unable to synchronize device\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
