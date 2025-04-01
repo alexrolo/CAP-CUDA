@@ -69,27 +69,34 @@ __global__ void mul(int *A, int *B, int *C, int rows, int cols)
  * @param rows Pointer to the number of rows
  * @param columns Pointer to the number of columns
  */
-void process_arguments(int argc, char *argv[], int *rows, int *columns)
+void process_arguments(int argc, char *argv[], int *rows, int *columns, int *threads)
 {
-    if (argc != 3)
+    if (argc != 4)
     {
-        fprintf(stderr, "Usage: %s <rows> <columns>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <rows> <columns> <threads_per_block\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
     *rows = atoi(argv[1]);
     *columns = atoi(argv[2]);
+    *threads = atoi(argv[3]);
 
     if (*rows <= 0 || *columns <= 0)
     {
         fprintf(stderr, "Error: Invalid matrix size.\n");
         exit(EXIT_FAILURE);
     }
+
+    if (*threads <= 0 || *threads > 1024)
+    {
+        fprintf(stderr, "Error: Invalid number of threads per block.\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 int main(int argc, char *argv[])
 {
-    int rows, columns;
+    int rows, columns, threads;
     size_t size;
     int *A, *B, *C;
     int *d_A, *d_B, *d_C;
@@ -97,7 +104,7 @@ int main(int argc, char *argv[])
     float ms;
 
     // Process command line arguments
-    process_arguments(argc, argv, &rows, &columns);
+    process_arguments(argc, argv, &rows, &columns, &threads);
 
     // Allocate memory for matrices [CPU]
     A = allocate_matrix(rows, columns);
@@ -125,7 +132,7 @@ int main(int argc, char *argv[])
     cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
 
     // Define grid and block dimensions
-    dim3 threadsPerBlock(16, 16);
+    dim3 threadsPerBlock(threads, threads);
     dim3 numBlocks((columns + threadsPerBlock.x - 1) / threadsPerBlock.x,
                    (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);
 
