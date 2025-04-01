@@ -1,6 +1,6 @@
 #include <time.h>
-#include <cuda.h>
 
+#include "cuda_functions.cuh"
 #include "functions.h"
 #include "gauss_jordan.h"
 
@@ -28,30 +28,30 @@ double* solve_equation_with_gpu(unsigned int size, double** mat, double* sol)
 
     // Allocate memory on the GPU
     size_t total_size = size * size * sizeof(double*);
-    cudaMalloc((void**) &d_mat, total_size);
-    cudaMalloc((void**) &d_sol, size * sizeof(double));
-    cudaMemcpy(d_mat, mat, total_size, cudaMemcpyHostToDevice);
+    CudaMalloc((void**) &d_mat, total_size);
+    CudaMalloc((void**) &d_sol, size * sizeof(double));
+    CudaMemcpy(d_mat, mat, total_size, cudaMemcpyHostToDevice);
     
     // TODO: Define dim3 grid dimensions
     // dim3 numThreads...
     // dim3 numBlocks...
 
-    cudaEventCreate(&start);
-    cudaEventCreate(&end);
+    CudaEventCreate(&start);
+    CudaEventCreate(&end);
 
     cudaEventRecord(start);
     // TODO: Call the kernel function
 
-    cudaEventSynchronize(end);
-    cudaEventRecord(end);
-    cudaEventElapsedTime(&ms, start, end);
+    CudaEventSynchronize(end);
+    CudaEventRecord(end);
+    CudaEventElapsedTime(&ms, start, end);
 
-    cudaMemcpy(sol, d_sol, size * sizeof(double), cudaMemcpyDeviceToHost);
+    CudaMemcpy(sol, d_sol, size * sizeof(double), cudaMemcpyDeviceToHost);
 
-    cudaFree(d_mat);
-    cudaFree(d_sol);
-    cudaEventDestroy(start);
-    cudaEventDestroy(end);
+    CudaFree(d_mat);
+    CudaFree(d_sol);
+    CudaEventDestroy(start);
+    CudaEventDestroy(end);
 
     for (i = 0; i < size ; i++)
         sol[i] = mat[i][size];

@@ -5,5 +5,8 @@
             "binaryPath": "/home/alex/Documents/EPI/master/CAP/S3/equations/equations",
             "binaryArgs": []
         }
-    ]
+    ],
+    "files.associations": {
+        "cuda_functions.cuh": "c"
+    }
 }
