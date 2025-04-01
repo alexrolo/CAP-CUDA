@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "functions.h"
+#include "log.h"
 
 /**
  * Function to perform Gauss-Jordan elimination

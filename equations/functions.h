@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "log.h"
+
 /**
  * Function to allocate memory for a square matrix of size n x n.
  * Will exit if memory allocation fails.

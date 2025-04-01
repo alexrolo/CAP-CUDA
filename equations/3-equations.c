@@ -3,60 +3,77 @@
 #include "functions.h"
 #include "gauss_jordan.h"
 
+double* solve_equation_with_cpu(unsigned int size, double **mat, double* sol)
+{
+    unsigned int i;
+
+    // Apply Gauss-Jordan elimination
+    gauss_jordan(size, mat);
+
+    // The solution is in the last column
+    for (i = 0; i < size; i++)
+        sol[i] = mat[i][size];
+
+    return sol;
+}
+
 int main(int argc, char *argv[])
 {
     unsigned int size; // Square matrix
     double **mat, *sol;
     clock_t start, end;
     double seconds;
+    char* buffer = (char*)malloc(128);
 
     // Check if the required arguments are provided
     if (argc != 2)
     {
-        printf("Usage: %s <size>\n", argv[0]);
+        sprintf(buffer, "Usage: %s <size>\n", argv[0]);
+        log_message(buffer);
         return 1;
     }
 
     if ((size = atoi(argv[1])) < 1)
     {
-        printf("Error: size must be greater than 0.\n");
+        log_message("Error: size must be greater than 0.\n");
         return 1;
     }
 
     // Allocate memory
     mat = allocate_matrix(size);
+    sol = (double *)malloc(size * sizeof(double));
 
     // Generate random matrix
     srand(time(NULL));
     generate_matrix(size, mat);
-    sol = (double *)malloc(size * sizeof(double));
 
-    printf("Equation system:\n");
-    print_equation_system(size, mat);
+    log_message("Equation system:\n");
+    // print_equation_system(size, mat);
 
-    // Apply Gauss-Jordan CPU
     start = clock();
-    gauss_jordan(size, mat);
+    sol = solve_equation_with_cpu(size, mat, sol);
     end = clock();
     seconds = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Execution time (seconds): %.5f\n", seconds);
+    sprintf(buffer, "Execution time (seconds): %.5f\n", seconds);
+    log_message(buffer);
 
-    printf("Resulting system:\n");
-    print_equation_system(size, mat);
+    log_message("Resulting system:\n");
+    // print_equation_system(size, mat);
 
     // The solution is in the last column
-    printf("System solution:\n");
+    log_message("System solution:\n");
     for (unsigned int i = 0; i < size; i++)
     {
-        printf("x%d = %.3f\n", i, mat[i][size]);
+        sprintf(buffer, "x%d = %.3f\n", i, mat[i][size]);
+        log_message(buffer);
         sol[i] = mat[i][size];
     }
 
     // Check if the solution is correct
     if (check_equation_system(size, mat, sol))
-        printf("The solution is correct.\n");
+        log_message("The solution is correct.\n");
     else
-        printf("The solution is incorrect.\n");
+        log_message("The solution is incorrect.\n");
 
     // Free matrix
     free_matrix(size, mat);
