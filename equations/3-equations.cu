@@ -39,11 +39,11 @@ double* solve_equation_with_gpu(unsigned int size, double** mat, double* sol)
     CudaEventCreate(&start);
     CudaEventCreate(&end);
 
-    cudaEventRecord(start);
+    cudaEventRecord(start, 0);
     // TODO: Call the kernel function
 
     CudaEventSynchronize(end);
-    CudaEventRecord(end);
+    CudaEventRecord(end, 0);
     CudaEventElapsedTime(&ms, start, end);
 
     CudaMemcpy(sol, d_sol, size * sizeof(double), cudaMemcpyDeviceToHost);
