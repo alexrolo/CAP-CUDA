@@ -43,8 +43,8 @@ void generate_matrix(int rows, int n, int *matrix)
  * @param A Pointer to the first matrix
  * @param B Pointer to the second matrix
  * @param C Pointer to the result matrix
- * @param rows Number of rows in the first matrix
- * @param cols Number of columns in the second matrix
+ * @param rows Number of rows in matrices
+ * @param cols Number of columns in matrices
  */
 __global__ void mul(int *A, int *B, int *C, int rows, int cols)
 {
@@ -94,6 +94,12 @@ void process_arguments(int argc, char *argv[], int *rows, int *columns, int *thr
     }
 }
 
+/**
+ * Main function
+ * @param argc Number of arguments
+ * @param argv Array of arguments
+ * @return 0 on success, non-zero on failure
+ */
 int main(int argc, char *argv[])
 {
     int rows, columns, threads;
