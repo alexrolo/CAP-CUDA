@@ -1,4 +1,5 @@
 #include <time.h>
+#include <cuda.h>
 
 #include "functions.h"
 #include "gauss_jordan.h"
@@ -12,6 +13,47 @@ double* solve_equation_with_cpu(unsigned int size, double **mat, double* sol)
 
     // The solution is in the last column
     for (i = 0; i < size; i++)
+        sol[i] = mat[i][size];
+
+    return sol;
+}
+
+double* solve_equation_with_gpu(unsigned int size, double** mat, double* sol)
+{
+    unsigned int i;
+    double** d_mat;
+    double* d_sol;
+    cudaEvent_t start, end;
+    float ms;
+
+    // Allocate memory on the GPU
+    size_t total_size = size * size * sizeof(double*);
+    cudaMalloc((void**) &d_mat, total_size);
+    cudaMalloc((void**) &d_sol, size * sizeof(double));
+    cudaMemcpy(d_mat, mat, total_size, cudaMemcpyHostToDevice);
+    
+    // TODO: Define dim3 grid dimensions
+    // dim3 numThreads...
+    // dim3 numBlocks...
+
+    cudaEventCreate(&start);
+    cudaEventCreate(&end);
+
+    cudaEventRecord(start);
+    // TODO: Call the kernel function
+
+    cudaEventSynchronize(end);
+    cudaEventRecord(end);
+    cudaEventElapsedTime(&ms, start, end);
+
+    cudaMemcpy(sol, d_sol, size * sizeof(double), cudaMemcpyDeviceToHost);
+
+    cudaFree(d_mat);
+    cudaFree(d_sol);
+    cudaEventDestroy(start);
+    cudaEventDestroy(end);
+
+    for (i = 0; i < size ; i++)
         sol[i] = mat[i][size];
 
     return sol;
