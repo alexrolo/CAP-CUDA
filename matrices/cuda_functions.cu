@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <cuda.h>
 #include "cuda_functions.cuh"
 
 void CudaEventCreate(cudaEvent_t *event)

@@ -1,6 +1,11 @@
 #ifndef CUDA_FUNCTIONS_H
 #define CUDA_FUNCTIONS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <cuda.h>
+
 /**
  * cudaEventCreate function with error handling
  * @param event Pointer to the event to be created
