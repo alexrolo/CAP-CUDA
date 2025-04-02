@@ -38,6 +38,26 @@ void generate_matrix(int rows, int n, int *matrix)
 }
 
 /**
+ * Prints a matrix to the console
+ * @param rows Number of rows
+ * @param columns Number of columns
+ * @param matrix Pointer to the matrix to be printed
+ */
+void print_matrix(int rows, int columns, int *matrix)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        printf("| ");
+        for (int j = 0; j < columns; j++)
+        {
+            printf("%d ", matrix[i * columns + j]);
+        }
+        printf("|\n");
+    }
+    printf("\n");
+}
+
+/**
  * Kernel function to multiply two matrices in GPU
  * @param A Pointer to the first matrix
  * @param B Pointer to the second matrix
@@ -111,6 +131,10 @@ int main(int argc, char *argv[])
     // Process command line arguments
     process_arguments(argc, argv, &rows, &columns, &threads);
 
+    // Create CUDA events for timing
+    CudaEventCreate(&start);
+    CudaEventCreate(&end);
+
     // Allocate memory for matrices [CPU]
     A = allocate_matrix(rows, columns);
     B = allocate_matrix(rows, columns);
@@ -136,31 +160,34 @@ int main(int argc, char *argv[])
     CudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
     CudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
 
+    // Print matrices (debugging)
+    // print_matrix(rows, columns, A);
+    // print_matrix(rows, columns, B);
+
     // Define grid and block dimensions
     dim3 threadsPerBlock(threads, threads);
     dim3 numBlocks((columns + threadsPerBlock.x - 1) / threadsPerBlock.x,
                    (rows + threadsPerBlock.y - 1) / threadsPerBlock.y);
 
-    // Create CUDA events for timing
-    CudaEventCreate(&start);
-    CudaEventCreate(&end);
-
     // Multiply matrices on GPU measuring time
-    CudaEventRecord(start, 0);
+    CudaEventRecord(start);
     mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, rows, columns);
+    CudaEventRecord(end);
     CudaDeviceSynchronize();
-    CudaEventRecord(end, 0);
 
     // Synchronize and calculate elapsed time
     CudaEventSynchronize(end);
     CudaEventElapsedTime(&ms, start, end);
 
-    // Copy result matrix from GPU to CPU
-    CudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
-
     // Print elapsed time
     printf("Time (milliseconds): %.5f\n", ms);
 
+    // Copy result matrix from GPU to CPU
+    CudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
+
+    // Check results (debugging)
+    // print_matrix(rows, columns, C);
+    
     // Free device memory
     CudaFree(d_A);
     CudaFree(d_B);
