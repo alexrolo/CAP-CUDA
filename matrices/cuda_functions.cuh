@@ -66,4 +66,9 @@ void CudaEventElapsedTime(float *ms, cudaEvent_t start, cudaEvent_t end);
  */
 void CudaDeviceSynchronize();
 
+/**
+ * Checks for CUDA errors and prints the error message if any
+ */
+void checkCudaError();
+
 #endif
