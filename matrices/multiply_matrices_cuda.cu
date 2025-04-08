@@ -173,7 +173,8 @@ int main(int argc, char *argv[])
     CudaEventRecord(start);
     mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, rows, columns);
     CudaEventRecord(end);
-    CudaDeviceSynchronize();
+    // Check for errors in kernel launch
+    checkCudaError();
 
     // Synchronize and calculate elapsed time
     CudaEventSynchronize(end);
@@ -187,7 +188,7 @@ int main(int argc, char *argv[])
 
     // Check results (debugging)
     // print_matrix(rows, columns, C);
-    
+
     // Free device memory
     CudaFree(d_A);
     CudaFree(d_B);
