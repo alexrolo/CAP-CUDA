@@ -565,3 +565,4 @@ pyrightconfig.json
 
 **/multiply_matrices_cuda
 **/equations/equations
+cuda_mul_benchmark
