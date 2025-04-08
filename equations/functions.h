@@ -13,15 +13,7 @@
  * 
  * @return A pointer to the allocated matrix
  */
-double **allocate_matrix(int size);
-
-/**
- * Function to free the allocated memory for a matrix
- * 
- * @param m The number of rows in the matrix
- * @param matrix The matrix to be freed
- */
-void free_matrix(int m, double **matrix);
+double *allocate_matrix(unsigned int size);
 
 /**
  * Function to generate a random matrix of size n x n
@@ -29,7 +21,7 @@ void free_matrix(int m, double **matrix);
  * @param size The size of the matrix
  * @param matrix The matrix to be filled with random values
  */
-void generate_matrix(int size, double **matrix);
+void generate_matrix(unsigned int size, double *matrix);
 
 /**
  * Function to print the system of equations
@@ -37,7 +29,7 @@ void generate_matrix(int size, double **matrix);
  * @param size The size of the matrix
  * @param mat The matrix to be printed
  */
-void print_equation_system(int size, double **mat);
+void print_equation_system(unsigned int size, double *matrix);
 
 /**
  * Function to check a solution of a system of equations
@@ -48,7 +40,7 @@ void print_equation_system(int size, double **mat);
  * 
  * @return 1 if the solution is correct, 0 otherwise
  */
-int check_equation_system(int size, double **mat, double *sol);
+int check_equation_system(unsigned int size, double *matrix, double *solution);
 
 /**
  * Function to copy a matrix
@@ -57,6 +49,6 @@ int check_equation_system(int size, double **mat, double *sol);
  * @param src The source matrix
  * @param dest The destination matrix
  */
-void copy_matrix(int size, double **src, double **dest);
+void copy_matrix(unsigned int size, double *src, double *dest);
 
 #endif // FUNCTIONS_H

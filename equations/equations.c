@@ -2,7 +2,7 @@
 
 #include "functions.h"
 
-void gauss_jordan(unsigned int size, double **mat)
+void gauss_jordan(unsigned int size, double *matrix)
 {
     unsigned int current_column = 0;
     for (current_column = 0; current_column < size; current_column++)
@@ -12,7 +12,7 @@ void gauss_jordan(unsigned int size, double **mat)
         double max_value = 0;
         for (current_row = current_column; current_row < size; current_row++)
         {
-            double current_value = *(*(mat + current_row) + current_column);
+            double current_value = *(matrix + current_row * size + current_column);
             if (current_value < 0)
                 current_value = -current_value; // Take absolute value for comparison
             if (current_value > max_value)
@@ -25,24 +25,27 @@ void gauss_jordan(unsigned int size, double **mat)
         // Swap rows
         if (max_row != current_column)
         {
-            double *temp = mat[current_column];
-            mat[current_column] = mat[max_row];
-            mat[max_row] = temp;
+            for (unsigned int i = 0; i <= size; i++)
+            {
+                double temp = *(matrix + current_column * size + i);
+                *(matrix + current_column * size + i) = *(matrix + max_row * size + i);
+                *(matrix + max_row * size + i) = temp;
+            }
         }
 
         // Make the diagonal element equal to 1
-        double divisor = *(*(mat + current_column) + current_column);
+        double divisor = *(matrix + current_column * size + current_column);
         for (unsigned int i = 0 ; i <= size ; i++)
-            *(*(mat + current_column) + i) /= divisor; // Normalize the pivot row
+            *(matrix + current_column * size + i) /= divisor; // Normalize the pivot row
 
         // Make zeros in the current column
         for (unsigned int i = 0; i < size; i++)
         {
             if (i != current_column)
             {
-                double multiplier = *(*(mat + i) + current_column) / *(*(mat + current_column) + current_column);
+                double multiplier = *(matrix + i * size + current_column) / *(matrix + current_column * size + current_column);
                 for (unsigned int j = 0; j <= size; j++)
-                    *(*(mat + i) + j) -= multiplier * *(*(mat + current_column) + j); // Eliminate the current column
+                    *(matrix + i * size + j) -= multiplier * *(matrix + current_column * size + j); // Eliminate the current column
             }
         }
     }
@@ -50,8 +53,8 @@ void gauss_jordan(unsigned int size, double **mat)
 
 int main(int argc, char *argv[])
 {
-    unsigned int size; // Square matrix
-    double **mat, *sol;
+    unsigned int size; // Square matrixrix
+    double *matrix, *sol;
     clock_t start, end;
     double seconds;
     char* buffer = (char*)malloc(128);
@@ -70,22 +73,22 @@ int main(int argc, char *argv[])
     }
 
     // Allocate memory
-    mat = allocate_matrix(size);
+    matrix = allocate_matrix(size);
     sol = (double *)malloc(size * sizeof(double));
 
-    // Generate random matrix
+    // Generate random matrixrix
     srand(time(NULL));
-    generate_matrix(size, mat);
+    generate_matrix(size, matrix);
 
     unsigned int i;
 
     start = clock();
-    gauss_jordan(size, mat);
+    gauss_jordan(size, matrix);
     end = clock();
 
     // The solution is in the last column
     for (i = 0; i < size; i++)
-        sol[i] = mat[i][size];
+        sol[i] = *(matrix + i * (size+1));
 
     seconds = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Execution time (seconds): %.5f\n", seconds);
@@ -93,19 +96,16 @@ int main(int argc, char *argv[])
     // The solution is in the last column
     printf("System solution:\n");
     for (i = 0; i < size; i++)
-    {
-        printf("x%d = %.3f\n", i, mat[i][size]);
-        sol[i] = mat[i][size];
-    }
+        printf("x%d = %.3f\n", i, sol[i]);
 
     // Check if the solution is correct
-    if (check_equation_system(size, mat, sol))
+    if (check_equation_system(size, matrix, sol))
         printf("The solution is correct.\n");
     else
         printf("The solution is incorrect.\n");
 
-    // Free matrix
-    free_matrix(size, mat);
+    // Free matrixrix
+    free(matrix);
     free(sol);
     free(buffer);
 

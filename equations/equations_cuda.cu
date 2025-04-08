@@ -1,4 +1,5 @@
 #include "cuda_functions.cuh"
+#include "functions.h"
 
 __global__ void gauss_jordan(unsigned int size, double *mat)
 {
