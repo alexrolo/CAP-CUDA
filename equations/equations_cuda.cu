@@ -97,14 +97,13 @@ int main(int argc, char *argv[])
     // Check if the required arguments are provided
     if (argc != 2)
     {
-        sprintf(buffer, "Usage: %s <size>\n", argv[0]);
-        log_message(buffer);
+        fprintf(stderr, "Usage: %s <size>\n", argv[0]);
         return 1;
     }
 
     if ((size = atoi(argv[1])) < 1)
     {
-        log_message("Error: size must be greater than 0.\n");
+        fprintf(stderr, "Invalid size: %s\n", argv[1]);
         return 1;
     }
 
@@ -127,23 +126,21 @@ int main(int argc, char *argv[])
         sol[i] = mat[i][size];
 
     seconds = (double)(end - start) / CLOCKS_PER_SEC;
-    sprintf(buffer, "Execution time (seconds): %.5f\n", seconds);
-    log_message(buffer);
+    printf("Execution time (seconds): %.5f\n", seconds);
 
     // The solution is in the last column
-    log_message("System solution:\n");
+    printf("System solution:\n");
     for (unsigned int i = 0; i < size; i++)
     {
-        sprintf(buffer, "x%d = %.3f\n", i, mat[i][size]);
-        log_message(buffer);
+        printf("x%d = %.3f\n", i, mat[i][size]);
         sol[i] = mat[i][size];
     }
 
     // Check if the solution is correct
     if (check_equation_system(size, mat, sol))
-        log_message("The solution is correct.\n");
+        printf("The solution is correct.\n");
     else
-        log_message("The solution is incorrect.\n");
+        printf("The solution is incorrect.\n");
 
     // Free matrix
     free_matrix(size, mat);

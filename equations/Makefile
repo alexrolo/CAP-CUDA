@@ -5,9 +5,9 @@ CFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address 
 CUDAFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address -fsanitize=undefined -Wshadow -Xcompiler -fopenmp
 
 C_TARGET = equations
-C_OBJ = functions.o
+C_OBJ = functions.o equations.o
 CUDA_TARGET = equations_cuda
-CUDA_OBJ = functions.o cuda_functions.o
+CUDA_OBJ = functions.o cuda_functions.o equations_cuda.o
 
 
 
