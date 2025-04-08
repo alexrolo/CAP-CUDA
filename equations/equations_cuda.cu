@@ -50,7 +50,7 @@ __global__ void gauss_jordan(unsigned int size, double *matrix)
 
 double* solve_equation_with_gpu(unsigned int size, double* matrix, double* sol)
 {
-    unsigned int i;
+
     double* d_matrix;
     cudaEvent_t start, end;
     float ms;
@@ -73,15 +73,15 @@ double* solve_equation_with_gpu(unsigned int size, double* matrix, double* sol)
     // TODO: Call the kernel function
     gauss_jordan<<<numBlocks, threadsPerBlock>>>(size, d_matrix);
 
-    CudaEventSynchronize(end);
     CudaEventRecord(end);
+    CudaEventSynchronize(end);
     CudaEventElapsedTime(&ms, start, end);
 
     CudaFree(d_matrix);
     CudaEventDestroy(start);
     CudaEventDestroy(end);
 
-    for (i = 0; i < size ; i++)
+    for (unsigned int i = 0; i < size ; i++)
         sol[i] = *(matrix + i * size + size);
 
     return sol;
