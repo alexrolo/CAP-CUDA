@@ -2,7 +2,7 @@ CC = gcc
 NVCC = nvcc
 
 CFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address -fsanitize=undefined -Wshadow
-CUDAFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address -fsanitize=undefined -Wshadow -Xcompiler -fopenmp
+CUDAFLAGS = -Werror all-warnings -g -pg -O0 -Xcompiler -fopenmp
 
 C_TARGET = equations
 C_OBJ = functions.o equations.o
@@ -25,7 +25,11 @@ functions.o: functions.c
 cuda_functions.o: cuda_functions.cu
 	$(NVCC) $(CUDAFLAGS) -c $<
 
+%_cuda.o : %_cuda.cu
+	$(NVCC) $(CUDAFLAGS) -o $@ $^
 
+%.o : %.c
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
 	rm -f $(CUDA_TARGET) $(C_TARGET) $(C_OBJ) $(CUDA_OBJ)
