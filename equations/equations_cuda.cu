@@ -1,5 +1,4 @@
 #include "functions_cuda.cuh"
-#include "functions.h"
 
 __global__ void gauss_jordan(unsigned int size, double *matrix)
 {
@@ -70,12 +69,12 @@ double* solve_equation_with_gpu(unsigned int size, double* matrix, double* sol)
     CudaEventCreate(&start);
     CudaEventCreate(&end);
 
-    cudaEventRecord(start, 0);
+    CudaEventRecord(start);
     // TODO: Call the kernel function
     gauss_jordan<<<numBlocks, threadsPerBlock>>>(size, d_matrix);
 
     CudaEventSynchronize(end);
-    CudaEventRecord(end, 0);
+    CudaEventRecord(end);
     CudaEventElapsedTime(&ms, start, end);
 
     CudaFree(d_matrix);

@@ -1,13 +1,13 @@
 CC = gcc
 NVCC = nvcc
 
-CFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -fsanitize=address -fsanitize=undefined -Wshadow
+CFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -Wshadow
 CUDAFLAGS = -Xcompiler -fopenmp
 
 C_TARGET = equations
 C_OBJ = functions.o equations.o
 CUDA_TARGET = equations_cuda
-CUDA_OBJ = functions.o functions_cuda.o equations_cuda.o
+CUDA_OBJ = functions_cuda.o equations_cuda.o
 
 all: $(CUDA_TARGET) $(C_TARGET)
 
