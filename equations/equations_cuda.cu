@@ -12,7 +12,7 @@ __global__ void gauss_jordan(unsigned int size, double *mat)
     double max_value = 0;
     for (current_row = current_column; current_row < size; current_row++)
     {
-        double current_value = *(*(mat + current_row) + current_column);
+        double current_value = *(mat + current_row + current_column * size);
         if (current_value < 0)
             current_value = -current_value; // Take absolute value for comparison
         if (current_value > max_value)
@@ -24,26 +24,26 @@ __global__ void gauss_jordan(unsigned int size, double *mat)
 
     // Swap rows
     if (max_row != current_column)
-    {
-        double *temp = mat[current_column];
-        mat[current_column] = mat[max_row];
-        mat[max_row] = temp;
-    }
+        for (current_row = 0; current_row < size; current_row++)
+        {
+            double temp = *(mat + current_column + current_row * size);
+            *(mat + current_column + current_row * size) = *(mat + max_row + current_row * size);
+            *(mat + max_row + current_row * size) = temp;
+        }
 
     // Make the diagonal element equal to 1
-    double divisor = *(*(mat + current_column) + current_column);
+    double divisor = *(mat + current_column + current_column * size);
     for (unsigned int i = 0; i <= size; i++)
-        *(*(mat + current_column) + i) /= divisor; // Normalize the pivot row
-    // print_equation_system(size, mat);
+        *(mat + current_column * size + i) /= divisor; // Normalize the pivot row
 
     // Make zeros in the current column
     for (unsigned int i = 0; i < size; i++)
     {
         if (i != current_column)
         {
-            double multiplier = *(*(mat + i) + current_column) / *(*(mat + current_column) + current_column);
+            double multiplier = *(mat + i * size + current_column) / *(mat + current_column * size + current_column);
             for (unsigned int j = 0; j <= size; j++)
-                *(*(mat + i) + j) -= multiplier * *(*(mat + current_column) + j); // Eliminate the current column
+                *(mat + i * size + j) -= multiplier * *(mat + current_column * size + j); // Eliminate the current column
         }
     }
 }
