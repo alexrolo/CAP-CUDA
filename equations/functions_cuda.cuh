@@ -1,5 +1,5 @@
-#ifndef CUDA_FUNCTIONS_H
-#define CUDA_FUNCTIONS_H
+#ifndef FUNCTIONS_CUDA_H
+#define FUNCTIONS_CUDA_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,4 +15,4 @@ void CudaEventRecord(cudaEvent_t event, cudaStream_t stream);
 void CudaEventSynchronize(cudaEvent_t event);
 void CudaEventElapsedTime(float *ms, cudaEvent_t start, cudaEvent_t end);
 
-#endif
+#endif // FUNCTIONS_CUDA_H

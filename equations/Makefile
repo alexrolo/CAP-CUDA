@@ -7,29 +7,24 @@ CUDAFLAGS = -Werror all-warnings -g -pg -O0 -Xcompiler -fopenmp
 C_TARGET = equations
 C_OBJ = functions.o equations.o
 CUDA_TARGET = equations_cuda
-CUDA_OBJ = functions.o cuda_functions.o equations_cuda.o
-
-
+CUDA_OBJ = functions.o functions_cuda.o equations_cuda.o
 
 all: $(CUDA_TARGET) $(C_TARGET)
 
 $(C_TARGET): $(C_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+%.o : %.c
+	$(CC) $(CFLAGS) -c $<
+
 $(CUDA_TARGET): $(CUDA_OBJ)
 	$(NVCC) $(CUDAFLAGS) -o $@ $^
 
-functions.o: functions.c
-	$(CC) $(CFLAGS) -c $<
-
-cuda_functions.o: cuda_functions.cu
+functions_cuda.o : functions_cuda.cu
 	$(NVCC) $(CUDAFLAGS) -c $<
 
-%_cuda.o : %_cuda.cu
-	$(NVCC) $(CUDAFLAGS) -o $@ $^
-
-%.o : %.c
-	$(CC) $(CFLAGS) -o $@ $^
+equations_cuda.o : equations_cuda.cu
+	$(NVCC) $(CUDAFLAGS) -c $<
 
 clean:
 	rm -f $(CUDA_TARGET) $(C_TARGET) $(C_OBJ) $(CUDA_OBJ)

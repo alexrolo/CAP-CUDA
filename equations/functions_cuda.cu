@@ -1,4 +1,4 @@
-#include "cuda_functions.cuh"
+#include "functions_cuda.cuh"
 
 /**
  * cudaEventCreate function with error handling
