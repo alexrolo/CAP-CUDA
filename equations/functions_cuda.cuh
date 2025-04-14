@@ -7,6 +7,8 @@
 #include <time.h>
 #include <cuda.h>
 
+#include "functions.h"
+
 /**
  * cudaEventCreate function with error handling
  * @param event Pointer to the event to be created
@@ -71,51 +73,5 @@ void CudaDeviceSynchronize();
  * Checks for CUDA errors and prints the error message if any
  */
 void checkCudaError();
-
-/**
- * Function to allocate memory for a square matrix of size n x n.
- * Will exit if memory allocation fails.
- * 
- * @param size The size of the matrix
- * 
- * @return A pointer to the allocated matrix
- */
-double *allocate_matrix(unsigned int size);
-
-/**
- * Function to generate a random matrix of size n x n
- * 
- * @param size The size of the matrix
- * @param matrix The matrix to be filled with random values
- */
-void generate_matrix(unsigned int size, double *matrix);
-
-/**
- * Function to print the system of equations
- * 
- * @param size The size of the matrix
- * @param mat The matrix to be printed
- */
-void print_equation_system(unsigned int size, double *matrix);
-
-/**
- * Function to check a solution of a system of equations
- * 
- * @param size The size of the matrix
- * @param mat The matrix to be checked
- * @param sol The solution to be checked
- * 
- * @return 1 if the solution is correct, 0 otherwise
- */
-int check_equation_system(unsigned int size, double *matrix, double *solution);
-
-/**
- * Function to copy a matrix
- * 
- * @param size The size of the matrix
- * @param src The source matrix
- * @param dest The destination matrix
- */
-double* copy_matrix(unsigned int size, double *src, double *dest);
 
 #endif
