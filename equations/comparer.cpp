@@ -7,27 +7,30 @@
 int main(int argc, char **argv)
 {
     std::vector<unsigned int> sizes = {
-        2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+        2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
     const unsigned int iterations = 32;
 
     double *matrix, *original_matrix = NULL, *sol;
     clock_t start, end;
     double seconds;
+    unsigned int total_iterations = 0;
 
     bool was_valid = false;
 
     // Generate random matrix
     srand(time(NULL));
 
-    std::cout << "SIZE;ARCH;TIME" << std::endl;
+    std::cout << "SIZE;ARCH;TIME;SUCC" << std::endl;
     for (auto size : sizes)
     {
         seconds = 0;
-        was_valid = false;
+        total_iterations = 0;
         for (unsigned int iteration = 0; iteration < iterations; iteration++)
         {
+            was_valid = false;
             while (!was_valid)
             {
+                total_iterations++;
                 // Allocate memory
                 matrix = allocate_matrix(size);
                 sol = (double *)malloc(size * sizeof(double));
@@ -53,6 +56,7 @@ int main(int argc, char **argv)
                 free(sol);
             }
         }
-        std::cout << size << ";" << "CPU" << ";" << seconds / iterations << std::endl;
+        const double success_rate = (double)iterations / total_iterations;
+        std::cout << size << ";" << "CPU" << ";" << seconds / iterations << ";" << success_rate << std::endl;
     }
 }
