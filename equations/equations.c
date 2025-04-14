@@ -46,12 +46,22 @@ int main(int argc, char *argv[])
     printf("Execution time (seconds): %.5f\n", seconds);
 
     // The solution is in the last column
-    printf("System solution:\n");
-    for (i = 0; i < size; i++)
-        printf("x%d = %.3f\n", i, sol[i]);
+    if (size < 16)
+    {
+        printf("System solution:\n");
+        for (i = 0; i < size; i++)
+            printf("x%d = %.3f\n", i, sol[i]);
+    }
+    else
+    {
+        printf("System solution is too large to display.\n");
+    }
 
     printf("Checking against original matrix:\n");
-    print_equation_system(size, original_matrix);
+    if (size < 16)
+        print_equation_system(size, original_matrix);
+    else
+        printf("Original matrix is too large to display.\n");
 
     // Check if the solution is correct
     if (check_equation_system(size, original_matrix, sol))
