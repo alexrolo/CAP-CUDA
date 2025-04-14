@@ -11,6 +11,7 @@ int main(int argc, char **argv)
     const unsigned int iterations = 32;
 
     double *matrix, *original_matrix = NULL, *sol;
+    clock_t main_start, main_end;
     clock_t start, end;
     double seconds;
 
@@ -20,6 +21,9 @@ int main(int argc, char **argv)
     srand(time(NULL));
 
     std::cout << "SIZE;ARCH;TIME" << std::endl;
+
+    main_start = clock();
+
     for (auto size : sizes)
     {
         seconds = 0;
@@ -55,4 +59,9 @@ int main(int argc, char **argv)
         }
         std::cout << size << ";" << "CPU" << ";" << seconds / iterations << std::endl;
     }
+
+    main_end = clock();
+
+    std::cout << "\nTotal execution time: " << (double)(main_end - main_start) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "\nBenchmark completed." << std::endl;
 }
