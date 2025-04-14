@@ -567,3 +567,5 @@ pyrightconfig.json
 **/equations/equations
 cuda_mul_benchmark
 equations_cuda
+comparer
+comparer_cuda
