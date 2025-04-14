@@ -116,6 +116,6 @@ int check_equation_system(unsigned int size, double *matrix, double *solution);
  * @param src The source matrix
  * @param dest The destination matrix
  */
-void copy_matrix(unsigned int size, double *src, double *dest);
+double* copy_matrix(unsigned int size, double *src, double *dest);
 
 #endif
