@@ -1,21 +1,26 @@
-CC = gcc
+CC = g++
 NVCC = nvcc
 
-CFLAGS = -Wall -Wextra -pedantic -std=c99 -Werror -g -pg -O0 -Wshadow
+CFLAGS = -Wall -Wextra -pedantic -Werror -g -pg -O0 -Wshadow
 CUDAFLAGS = -Xcompiler -fopenmp
 
-C_TARGET = equations
-C_OBJ = functions.o equations.o
+CPP_TARGET = comparer
+CPP_OBJ = functions.o gauss_jordan.o comparer.o
+C_TARGET = equations 
+C_OBJ = functions.o gauss_jordan.o equations.o
 CUDA_TARGET = equations_cuda
 CUDA_OBJ = functions_cuda.o equations_cuda.o
 
-all: $(CUDA_TARGET) $(C_TARGET)
+all: $(CUDA_TARGET) $(C_TARGET) $(CPP_TARGET)
+
+$(CPP_TARGET): $(CPP_OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(C_TARGET): $(C_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o : %.c
-	$(NVCC) $(CUDAFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $<
 
 equations_cuda : functions.o functions_cuda.o
 	$(NVCC) $(CUDAFLAGS) equations_cuda.cu -o $@ functions.o functions_cuda.o
