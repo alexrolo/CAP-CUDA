@@ -9,7 +9,7 @@ CPP_OBJ = functions.o gauss_jordan.o comparer.o
 C_TARGET = equations 
 C_OBJ = functions.o gauss_jordan.o equations.o
 CUDA_TARGET = equations_cuda
-CUDA_OBJ = functions_cuda.o gauss_jordan_cuda.o equations_cuda.o
+CUDA_OBJ = functions.o functions_cuda.o gauss_jordan_cuda.o equations_cuda.o
 
 all: $(CUDA_TARGET) $(C_TARGET) $(CPP_TARGET)
 
@@ -22,8 +22,8 @@ $(C_TARGET): $(C_OBJ)
 %.o : %.c
 	$(CC) $(CFLAGS) -c $<
 
-equations_cuda : functions.o functions_cuda.o
-	$(NVCC) $(CUDAFLAGS) equations_cuda.cu -o $@ functions.o functions_cuda.o
+$(CUDA_TARGET) : $(CUDA_OBJ)
+	$(NVCC) $(CUDAFLAGS) -o $@ $^
 
 equations_cuda.o : equations_cuda.cu functions_cuda.o gauss_jordan_cuda.o
 	$(NVCC) $(CUDAFLAGS) -c $<
