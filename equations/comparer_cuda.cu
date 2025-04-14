@@ -58,43 +58,47 @@ int main(int argc, char **argv)
     // Generate random matrix
     srand(time(NULL));
 
-    std::cout << "SIZE;ARCH;TIME;SUCC" << std::endl;
+    std::cout << "SIZE;ARCH;THRS;TIME;SUCC" << std::endl;
     for (auto size : sizes)
     {
-        seconds = 0;
-        total_iterations = 0;
-        for (unsigned int iteration = 0; iteration < iterations; iteration++)
+        const unsigned int half_size = size / 2;
+        for (unsigned int threads = 1; threads <= half_size; threads++)
         {
-            was_valid = false;
-            while (!was_valid)
+            seconds = 0;
+            total_iterations = 0;
+            for (unsigned int iteration = 0; iteration < iterations; iteration++)
             {
-                total_iterations++;
-                // Allocate memory
-                matrix = allocate_matrix(size);
-                sol = (double *)malloc(size * sizeof(double));
-                generate_matrix(size, matrix);
-                original_matrix = copy_matrix(size, matrix, original_matrix);
+                was_valid = false;
+                while (!was_valid)
+                {
+                    total_iterations++;
+                    // Allocate memory
+                    matrix = allocate_matrix(size);
+                    sol = (double *)malloc(size * sizeof(double));
+                    generate_matrix(size, matrix);
+                    original_matrix = copy_matrix(size, matrix, original_matrix);
 
-                start = clock();
-                solve_equation_with_gpu(size, threads, matrix, sol);
-                end = clock();
+                    start = clock();
+                    solve_equation_with_gpu(size, threads, matrix, sol);
+                    end = clock();
 
-                // The solution is in the last column
-                for (unsigned int i = 0; i < size; i++)
-                    sol[i] = *(matrix + i * (size + 1) + size);
+                    // The solution is in the last column
+                    for (unsigned int i = 0; i < size; i++)
+                        sol[i] = *(matrix + i * (size + 1) + size);
 
-                seconds += (double)(end - start) / CLOCKS_PER_SEC;
+                    seconds += (double)(end - start) / CLOCKS_PER_SEC;
 
-                // Check if the solution is correct
-                was_valid = check_equation_system(size, matrix, sol);
+                    // Check if the solution is correct
+                    was_valid = check_equation_system(size, matrix, sol);
 
-                // Free matrix
-                free(matrix);
-                free(original_matrix);
-                free(sol);
+                    // Free matrix
+                    free(matrix);
+                    free(original_matrix);
+                    free(sol);
+                }
             }
+            const double success_rate = (double)iterations / total_iterations;
+            std::cout << size << ";" << "GPU" << ";" << threads << ";" << seconds / iterations << ";" << success_rate << std::endl;
         }
-        const double success_rate = (double)iterations / total_iterations;
-        std::cout << size << ";" << "CPU" << ";" << seconds / iterations << ";" << success_rate << std::endl;
     }
 }
