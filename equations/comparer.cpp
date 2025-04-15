@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
     std::vector<unsigned int> sizes = {
-        2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+        250, 500, 750, 1000, 1250, 1500, 1750, 2000};
     const unsigned int iterations = 32;
 
     double *matrix, *original_matrix = NULL, *sol;
