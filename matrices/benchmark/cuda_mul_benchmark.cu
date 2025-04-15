@@ -1,6 +1,6 @@
 #include "functions.cuh"
 
-#define only_kernel_time 1
+#define ONLY_KERNEL_TIME 1
 
 /**
  * Main funtction
@@ -50,7 +50,7 @@ int main()
                 CudaEventCreate(&end);
                 
                 // Stuff to be timed
-                if (only_kernel_time)
+                if (ONLY_KERNEL_TIME)
                 {
                     // Measure only kernel execution time
                     cuda_malloc_and_copy(&d_A, &d_B, &d_C, A, B, C, matrix_size);
@@ -93,7 +93,7 @@ int main()
 
     printf("\nTotal execution time: %f seconds", (double)(main_end - main_start) / CLOCKS_PER_SEC);
     printf("\nIterations: %d", iterations);
-    if (only_kernel_time)
+    if (ONLY_KERNEL_TIME)
         printf("\nExperiment taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
     else
         printf("\nExperiment WITHOUT taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
