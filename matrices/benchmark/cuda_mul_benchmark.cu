@@ -94,9 +94,9 @@ int main()
     printf("\nTotal execution time: %f seconds", (double)(main_end - main_start) / CLOCKS_PER_SEC);
     printf("\nIterations: %d", iterations);
     if (ONLY_KERNEL_TIME)
-        printf("\nExperiment taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
-    else
         printf("\nExperiment WITHOUT taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
+    else
+        printf("\nExperiment taking into account CUDA memory allocation and matrices copying (host-device and device-host).");
     printf("\nBenchmark completed.");
 
     return 0;
