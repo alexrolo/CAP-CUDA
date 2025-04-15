@@ -14,9 +14,9 @@ int main()
     cudaEvent_t start, end;
     clock_t main_start, main_end;
     float elapsed_time, ms;
-    int matrix_sizes[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192};
+    int matrix_sizes[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 636, 774, 892, 1024, 1280, 2048, 4096, 8192};
     int threads_per_block[] = {2, 4, 8, 16, 32};
-    int iterations = 4;
+    int iterations = 32;
 
     main_start = clock();
 
