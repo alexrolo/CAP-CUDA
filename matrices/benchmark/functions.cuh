@@ -104,6 +104,51 @@ void print_matrix(int rows, int cols, int *matrix);
  */
 void fill_matrix(int rows, int cols, int *matrix, int value);
 
+/**
+ * Allocates host (CPU) memory for all matrices and initializes them
+ * @param matrix_size Size of the matrices
+ * @param A Pointer to the first matrix
+ * @param B Pointer to the second matrix
+ * @param C Pointer to the result matrix
+ */
+void init_matrices(int matrix_size, int **A, int **B, int **C);
 
+/**
+ * Allocates memory on the device (GPU) and copies matrices from host to device
+ * @param d_A Pointer to the first matrix on device
+ * @param d_B Pointer to the second matrix on device
+ * @param d_C Pointer to the result matrix on device
+ * @param A Pointer to the first matrix on host
+ * @param B Pointer to the second matrix on host
+ * @param C Pointer to the result matrix on host
+ * @param matrix_size Size of the matrices
+ */
+void cuda_malloc_and_copy(int **d_A, int **d_B, int **d_C, int *A, int *B, int *C, int matrix_size);
+
+/**
+ * Free device memory for device (GPU) matrices
+ * @param d_A Pointer to the first matrix on device
+ * @param d_B Pointer to the second matrix on device
+ * @param d_C Pointer to the result matrix on device
+ */
+void cuda_free_matrices(int *d_A, int *d_B, int *d_C);
+
+/**
+ * Free host (CPU) memory for matrices
+ * @param A Pointer to the first matrix on host
+ * @param B Pointer to the second matrix on host
+ * @param C Pointer to the result matrix on host
+ */
+void free_matrices(int *A, int *B, int *C);
+
+/**
+ * Kernel function to multiply two matrices in GPU
+ * @param A Pointer to the first matrix
+ * @param B Pointer to the second matrix
+ * @param C Pointer to the result matrix
+ * @param rows Number of rows in matrices
+ * @param cols Number of columns in matrices
+ */
+__global__ void mul(int *A, int *B, int *C, int rows, int cols);
 
 #endif

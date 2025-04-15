@@ -146,3 +146,67 @@ void fill_matrix(int rows, int columns, int *matrix, int value)
         }
     }
 }
+
+void init_matrices(int matrix_size, int **A, int **B, int **C)
+{
+    *A = allocate_matrix(matrix_size, matrix_size);
+    *B = allocate_matrix(matrix_size, matrix_size);
+    *C = allocate_matrix(matrix_size, matrix_size);
+
+    if (*A == NULL || *B == NULL || *C == NULL)
+    {
+        fprintf(stderr, "Error: Could not allocate memory for the matrices.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    generate_matrix(matrix_size, matrix_size, *A);
+    generate_matrix(matrix_size, matrix_size, *B);
+    fill_matrix(matrix_size, matrix_size, *C, 0);
+}
+
+
+void cuda_malloc_and_copy(int **d_A, int **d_B, int **d_C, int *A, int *B, int *C, int matrix_size)
+{
+    CudaMalloc((void **)d_A, matrix_size * matrix_size * sizeof(int));
+    CudaMalloc((void **)d_B, matrix_size * matrix_size * sizeof(int));
+    CudaMalloc((void **)d_C, matrix_size * matrix_size * sizeof(int));
+
+    CudaMemcpy(*d_A, A, matrix_size * matrix_size * sizeof(int), cudaMemcpyHostToDevice);
+    CudaMemcpy(*d_B, B, matrix_size * matrix_size * sizeof(int), cudaMemcpyHostToDevice);
+
+    if (*d_A == NULL || *d_B == NULL || *d_C == NULL)
+    {
+        fprintf(stderr, "Error: Could not allocate memory on the device.\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void cuda_free_matrices(int *d_A, int *d_B, int *d_C)
+{
+    CudaFree(d_A);
+    CudaFree(d_B);
+    CudaFree(d_C);
+}
+
+void free_matrices(int *A, int *B, int *C)
+{
+    free(A);
+    free(B);
+    free(C);
+}
+
+__global__ void mul(int *A, int *B, int *C, int rows, int cols)
+{
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (row < rows && col < cols)
+    {
+        int sum = 0;
+        for (int k = 0; k < cols; k++)
+        {
+            sum += A[row * cols + k] * B[k * cols + col];
+        }
+        C[row * cols + col] = sum;
+    }
+}
