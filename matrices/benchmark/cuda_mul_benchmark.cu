@@ -1,5 +1,7 @@
 #include "functions.cuh"
 
+#define only_kernel_time 1
+
 /**
  * Main funtction
  * @brief Benchmark for CUDA matrix multiplication
@@ -48,13 +50,28 @@ int main()
                 CudaEventCreate(&end);
                 
                 // Stuff to be timed
-                CudaEventRecord(start);
-                cuda_malloc_and_copy(&d_A, &d_B, &d_C, A, B, C, matrix_size);
-                mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, matrix_size, matrix_size);
-                CudaMemcpy(C, d_C, matrix_size * matrix_size * sizeof(int), cudaMemcpyDeviceToHost);
-                CudaEventRecord(end);
-                CudaEventSynchronize(end);
-                CudaEventElapsedTime(&ms, start, end);
+                if (only_kernel_time)
+                {
+                    // Measure only kernel execution time
+                    cuda_malloc_and_copy(&d_A, &d_B, &d_C, A, B, C, matrix_size);
+                    CudaEventRecord(start);
+                    mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, matrix_size, matrix_size);
+                    CudaEventRecord(end);
+                    CudaEventSynchronize(end);
+                    CudaEventElapsedTime(&ms, start, end);
+                    CudaMemcpy(C, d_C, matrix_size * matrix_size * sizeof(int), cudaMemcpyDeviceToHost);
+                }
+                else
+                {
+                    // Measure total time including memory allocation and copying
+                    CudaEventRecord(start);
+                    cuda_malloc_and_copy(&d_A, &d_B, &d_C, A, B, C, matrix_size);
+                    mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, matrix_size, matrix_size);
+                    CudaMemcpy(C, d_C, matrix_size * matrix_size * sizeof(int), cudaMemcpyDeviceToHost);
+                    CudaEventRecord(end);
+                    CudaEventSynchronize(end);
+                    CudaEventElapsedTime(&ms, start, end);
+                }
 
                 // Get elapsed time
                 elapsed_time += ms;
@@ -76,7 +93,10 @@ int main()
 
     printf("\nTotal execution time: %f seconds", (double)(main_end - main_start) / CLOCKS_PER_SEC);
     printf("\nIterations: %d", iterations);
-    printf("\nExperiment taking into account CUDA memory allocation and matrices copying (host-device and device-host).");
+    if (only_kernel_time)
+        printf("\nExperiment taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
+    else
+        printf("\nExperiment WITHOUT taking into account CUDA memory allocation and matrices copying (host-device and device-host). Only kernel execution time.");
     printf("\nBenchmark completed.");
 
     return 0;
