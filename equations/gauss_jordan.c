@@ -1,4 +1,31 @@
 #include "gauss_jordan.h"
+#include "functions.h"
+
+void gauss_jordan_no_swap(unsigned int size, double *matrix)
+{
+    unsigned int current_column = 0;
+    const unsigned int actual_columns = size + 1;
+    for (current_column = 0; current_column < size; current_column++)
+    {
+        const double divisor = *(matrix + current_column * actual_columns + current_column);
+        for (unsigned int i = 0 ; i < actual_columns ; i++)
+         *(matrix + current_column * actual_columns + i) /= divisor;
+
+        for (unsigned int i = 0; i < size; i++)
+            if (i != current_column)
+            {
+                const double multiplier = *(matrix + i * actual_columns + current_column)*(-1);
+                for (unsigned int j = 0 ; j < actual_columns ; j++)
+                {
+                    const double newValue = (
+                            *(matrix + i * actual_columns + j) +
+                            *(matrix + current_column * actual_columns + j)
+                            * multiplier);
+                    *(matrix + i * actual_columns + j) = newValue;
+                }
+            }
+    }
+}
 
 void gauss_jordan(unsigned int size, double *matrix)
 {

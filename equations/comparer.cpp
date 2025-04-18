@@ -7,8 +7,8 @@
 int main(int argc, char **argv)
 {
     std::vector<unsigned int> sizes = {
-        250, 500, 750, 1000, 1250, 1500, 1750, 2000};
-    const unsigned int iterations = 32;
+        3};
+    const unsigned int iterations = 1;
 
     double *matrix, *original_matrix = NULL, *sol;
     clock_t main_start, main_end;
@@ -40,7 +40,8 @@ int main(int argc, char **argv)
                 original_matrix = copy_matrix(size, matrix, original_matrix);
 
                 start = clock();
-                gauss_jordan(size, matrix);
+                // gauss_jordan(size, matrix);
+                gauss_jordan_no_swap(size, matrix);
                 end = clock();
 
                 // The solution is in the last column
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
                 seconds += (double)(end - start) / CLOCKS_PER_SEC;
 
                 // Check if the solution is correct
-                was_valid = check_equation_system(size, matrix, sol);
+                was_valid = check_equation_system(size, original_matrix, sol);
 
                 // Free matrix
                 free(matrix);
