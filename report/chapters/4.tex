@@ -11,6 +11,7 @@ entre las implementaciones en CPU y GPU para tareas de cómputo intensivo, como 
 de sistemas de ecuaciones lineales mediante el método de Gauss Jordan. Debe recalcarse que este rendimiento es muy notable 
 en problemas que permiten una paralelización eficiente, lo que aprovecha al máximo la arquitectura de la GPU.
 
+\subsection{Producto matricial}
 En el caso del producto matricial, la GPU ofrece una mejora de rendimiento muy significativa, incluso frente a la major implementación 
 del problema en CPU (\zorder). Este hecho demuestra que, incluso con configuraciones poco óptimas (como es el uso de un sólo 
 \textit{thread per block}), la GPU supera ampliamente a la CPU, confirmando que este tipo de cómputo intensivo se beneficia 
@@ -22,3 +23,13 @@ ejecución, la GPU mantiene una relación mucho más contenida y predecible a me
 reafirma su utilidad no sólo para fines académicos, sino también para escenarios reales en ciencia de datos, simulación numérica
 y aprendizaje automático, donde las matrices de gran tamaño son la norma.
 
+\subsection{Gauss Jordan}
+En el caso del método de Gauss Jordan, la GPU ha demostrado una mejora de rendimiento
+notable siempre y cuando se paralelicen los procesos internos del cálculo de cada columna
+en lugar de repartir las columnas entre hilos dependientes.
+Este ejemplo es demostración de la viabilidad de paralelizar
+procesos internos cuando no es posible paralelizar el problema completo.
+Esta decisión podría ser descartada por miedo a introducir una mayor deuda técnica
+en el código a cambio de poco rendimiento,
+cuando en realidad el problema podría ser resuelto con mucha mayor eficiencia
+a cambio de poca deuda técnica.
