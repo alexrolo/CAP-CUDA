@@ -15,7 +15,7 @@ El problema consiste en la resolución de un sistema de ecuaciones lineales
 Para ello, se recibe como dato de entrada el tamaño del SEL
 (i.e. su número de incógnitas).
 De esta forma, un problema $N=3$ sería de la forma representada en la
-ecuación \ref{eq:sel}.
+ecuación \autoref{eq:sel}.
 
 \begin{mycapequ}[h]
 \begin{equation}
@@ -32,7 +32,7 @@ ecuación \ref{eq:sel}.
 Se utiliza como dato de entrada una matriz de tamaño $N \times N+1$.
 Esta estructura contiene los $N$ coeficientes del SEL en sus primeras $N$
 columnas y el vector de términos independientes en la columna $N+1$.
-(Véase \ref{eq:sel_matrix})
+(Véase \autoref{eq:sel_matrix})
 
 \begin{mycapequ}[h]
 \begin{equation}
@@ -75,7 +75,7 @@ las predicciones teóricas para este algoritmo.
 Se presenta una gráfica que muestra el comportamiento potencial
 del tiempo de ejecución respecto al tamaño del problema.
 Nótese que ambos ejes de la gráfica son logarítmicos.
-Véase \ref{fig:gpu_time}.
+Véase \autoref{fig:gpu_time}.
 
 \subsection{GPU}
 
@@ -92,7 +92,7 @@ para obtener el 1 en la diagonal principal
 y en la segunda se obtienen ceros en la columna actual
 (\texttt{eliminate\_column}).
 Este acercamiento reporta una tiempo notablemente mejor
-al de la CPU. Véase \ref{fig:gpu_time}
+al de la CPU. Véase \autoref{fig:gpu_time}
 
 \begin{figure}[h]
     \centering
@@ -118,7 +118,7 @@ utiliza una estructura bidimensional de hilos y bloques
 para iterar por todas las columnas y filas de la matriz,
 anulando la columna actual y aplicando el mismo
 factor al resto de columnas de la fila.
-Véase \ref{fig:KernelsGaussJordanGPU}.
+Véase \autoref{fig:KernelsGaussJordanGPU}.
 
 \begin{figure}[h]
 \centering
@@ -169,7 +169,7 @@ Véase \ref{fig:KernelsGaussJordanGPU}.
 Siguiendo este sistema,
 el trabajo realizado por los hilos
 para cada columna se representa
-con el diagrama \ref{fig:GaussJordanGPU}.
+con el diagrama \autoref{fig:GaussJordanGPU}.
 Se pueden ver dos puntos de sincronización
 en los que el paralelismo se rompe (nodos azules),
 el kernel \texttt{normalize\_row} que se ejecuta sobre
