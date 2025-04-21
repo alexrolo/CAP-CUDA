@@ -16,7 +16,7 @@ int main()
     cudaEvent_t start, end;
     clock_t main_start, main_end;
     float elapsed_time, ms;
-    int matrix_sizes[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 636, 774, 892, 1024, 1280, 2048, 4096, 8192};
+    int matrix_sizes[] = {2, 4, 8, 16, 32, 64, 128, 256, 512, 636, 774, 892, 1024, 1280, 1408, 1536, 2048, 4096, 8192};
     int threads_per_block[] = {2, 4, 8, 16, 32};
     int iterations = 32;
 
@@ -33,7 +33,7 @@ int main()
         init_matrices(matrix_size, &A, &B, &C);
 
         for (int j = 0; j < threads_count; j++)
-        {    
+        {
             int block_size = threads_per_block[j];
             elapsed_time = 0.0f;
 
@@ -42,13 +42,13 @@ int main()
             dim3 numBlocks((matrix_size + threadsPerBlock.x - 1) / threadsPerBlock.x,
                            (matrix_size + threadsPerBlock.y - 1) / threadsPerBlock.y);
 
+            // Create CUDA events for timing
+            CudaEventCreate(&start);
+            CudaEventCreate(&end);
+
             // Launch kernel k times
             for (int k = 0; k < iterations; k++)
             {
-                // Create CUDA events for timing
-                CudaEventCreate(&start);
-                CudaEventCreate(&end);
-                
                 // Stuff to be timed
                 if (ONLY_KERNEL_TIME)
                 {
@@ -60,6 +60,7 @@ int main()
                     CudaEventSynchronize(end);
                     CudaEventElapsedTime(&ms, start, end);
                     CudaMemcpy(C, d_C, matrix_size * matrix_size * sizeof(int), cudaMemcpyDeviceToHost);
+                    cuda_free_matrices(d_A, d_B, d_C);
                 }
                 else
                 {
@@ -68,6 +69,7 @@ int main()
                     cuda_malloc_and_copy(&d_A, &d_B, &d_C, A, B, C, matrix_size);
                     mul<<<numBlocks, threadsPerBlock>>>(d_A, d_B, d_C, matrix_size, matrix_size);
                     CudaMemcpy(C, d_C, matrix_size * matrix_size * sizeof(int), cudaMemcpyDeviceToHost);
+                    cuda_free_matrices(d_A, d_B, d_C);
                     CudaEventRecord(end);
                     CudaEventSynchronize(end);
                     CudaEventElapsedTime(&ms, start, end);
@@ -75,13 +77,13 @@ int main()
 
                 // Get elapsed time
                 elapsed_time += ms;
-                cuda_free_matrices(d_A, d_B, d_C);
-
-                // Destroy CUDA events
-                CudaEventDestroy(start);
-                CudaEventDestroy(end);
             }
-            
+
+            // Destroy CUDA events
+            CudaEventDestroy(start);
+            CudaEventDestroy(end);
+
+            // Calculate average time and print results
             elapsed_time /= iterations;
             printf("%d;%d;%f;%f\n", matrix_size, block_size, elapsed_time, elapsed_time / 1000);
         }

@@ -7,6 +7,8 @@
 \newcommand{\rowmajor}{\textit{Row-Major order}}
 \newcommand{\colmajor}{\textit{Column-Major order}}
 \newcommand{\zorder}{\textit{Z-Order}}
+\newcommand{\matrices}{\textit{Matrices}}
+\newcommand{\equations}{\textit{Equations}}
 
 % HYPERREF % 
 \AtBeginDocument{\renewcommand{\lstlistingname}{Fragmento}}
@@ -106,5 +108,21 @@
     xleftmargin=.1\textwidth, 
     xrightmargin=.1\textwidth
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% EQUATION CAPTION
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{amsmath}
+
+\usepackage{caption}
+\DeclareCaptionType{mycapequ}[][List of equations]
+\captionsetup[mycapequ]{labelformat=empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% SUBCAPTIONS AND SUBFIGURES
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{subcaption}
 
 \endinput
