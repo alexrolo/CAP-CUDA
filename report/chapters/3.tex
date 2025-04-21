@@ -75,14 +75,14 @@ las predicciones teóricas para este algoritmo.
 Se presenta una gráfica que muestra el comportamiento potencial
 del tiempo de ejecución respecto al tamaño del problema.
 Nótese que ambos ejes de la gráfica son logarítmicos.
-Véase \ref{fig:gpu_time}.
+Véase la \autoref{fig:gpu_time}.
 
 \subsection{GPU}
 
 La aceleración de un algoritmo paralelo se decide
 en el instante en que se planifican las secciones paralelas,
 sus tareas, comunicaciones, sincronización y dependencias.
-En el caso de Gauss Jordan, paralelizar el computo
+En el caso de Gauss Jordan, paralelizar el cómputo
 de cada columna es inviable, ya que cada columna
 depende de la columna anterior.
 En su lugar, se debe dividir el cómputo de cada columna
@@ -92,7 +92,7 @@ para obtener el 1 en la diagonal principal
 y en la segunda se obtienen ceros en la columna actual
 (\texttt{eliminate\_column}).
 Este acercamiento reporta una tiempo notablemente mejor
-al de la CPU. Véase \ref{fig:gpu_time}
+al de la CPU. Véase la \autoref{fig:gpu_time}
 
 \begin{figure}[h]
     \centering
@@ -118,7 +118,7 @@ utiliza una estructura bidimensional de hilos y bloques
 para iterar por todas las columnas y filas de la matriz,
 anulando la columna actual y aplicando el mismo
 factor al resto de columnas de la fila.
-Véase \ref{fig:KernelsGaussJordanGPU}.
+Véase la \autoref{fig:KernelsGaussJordanGPU}.
 
 \begin{figure}[h]
 \centering
@@ -169,7 +169,7 @@ Véase \ref{fig:KernelsGaussJordanGPU}.
 Siguiendo este sistema,
 el trabajo realizado por los hilos
 para cada columna se representa
-con el diagrama \ref{fig:GaussJordanGPU}.
+en la \autoref{fig:GaussJordanGPU}.
 Se pueden ver dos puntos de sincronización
 en los que el paralelismo se rompe (nodos azules),
 el kernel \texttt{normalize\_row} que se ejecuta sobre
