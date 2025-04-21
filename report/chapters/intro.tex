@@ -30,6 +30,7 @@ Todo el código fuente se encuentra disponible públicamente en el siguiente
 Con fines de realizar análisis de rendimiento, se han implementado \textit{benchmarks} para simplificar la ejecución y la toma 
 de tiempos con diferentes configuraciones y datos de entrada en ambos problemas.
 
+\subsubsection{Producto matricial}
 Respecto al producto matricial, se ha implementado un programa en C/CUDA (\textit{cuda\_mul\_benchmark.cu}) para cumplir con el 
 propósito anterior. Este programa permite la ejecución del producto de matrices de tamaño $N \times N$ con diferentes configuraciones
 de \textit{threads per block}. Además, se define un número de iteraciones para cada operación a realizar, de forma que se pueda 
@@ -37,4 +38,17 @@ obtener un tiempo medio de ejecución de todas ellas, minimizando así el impact
 De forma sencilla, modificando una simple variable (\textit{ONLY\_KERNEL\_TIME}), se puede elegir si se desea medir el tiempo 
 de ejecución del \textit{kernel} únicamente o si se desea incluir el tiempo de reserva de memoria y el tiempo de copia de resultados.
 El programa devuelve un \textit{log} en formato CSV con los resultados obtenidos.
+
+\subsubsection{Gauss Jordan}
+Para el problema de resolución de sistemas de ecuaciones lineales mediante el método de Gauss Jordan,
+se han implementado los programas \textit{equations.c} para la versión en C y
+\textit{equations\_cuda.cu} para la versión en CUDA,
+cumpliendo con los requisitos de la práctica.
+Para la obtención de métricas, se han utilizado los programas
+\textit{comparer.cpp} y \textit{comparer\_cuda.cu} respectivamente.
+Ambos programas son similares, iterando por una serie de tamaños de matriz y
+repitiendo los cálculos un total de 32 veces para obtener
+una media de tiempos de ejecución.
+Nótese que para ambos programas se ha utilizado la librería estándar de C++
+para simplificar el trabajo con \texttt{std::vector}.
 
