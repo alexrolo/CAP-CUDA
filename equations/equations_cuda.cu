@@ -1,66 +1,23 @@
 #include "functions_cuda.cuh"
 #include "gauss_jordan_cuda.cuh"
 
-double *solve_equation_with_gpu(unsigned int size, unsigned int threads, double *matrix, double *sol)
-{
-    double *d_matrix;
-    cudaEvent_t start, end;
-    float ms;
-
-    // Allocate memory on the GPU
-    size_t total_size = size * (size + 1) * sizeof(double);
-    CudaMalloc((void **)&d_matrix, total_size);
-    CudaMemcpy(d_matrix, matrix, total_size, cudaMemcpyHostToDevice);
-
-    // Define dim3 grid dimensions
-    dim3 threadsPerBlock(threads, threads);
-    dim3 numBlocks((size + threadsPerBlock.x - 1) / threadsPerBlock.x,
-                   (size + threadsPerBlock.y - 1) / threadsPerBlock.y);
-
-    CudaEventCreate(&start);
-    CudaEventCreate(&end);
-
-    CudaEventRecord(start);
-    // TODO: Call the kernel function
-    gauss_jordan<<<numBlocks, threadsPerBlock>>>(size, d_matrix);
-
-    CudaEventRecord(end);
-    CudaEventSynchronize(end);
-    CudaEventElapsedTime(&ms, start, end);
-
-    CudaFree(d_matrix);
-    CudaEventDestroy(start);
-    CudaEventDestroy(end);
-
-    for (unsigned int i = 0; i < size; i++)
-        sol[i] = *(matrix + i * (size + 1) + size);
-
-    return sol;
-}
-
 int main(int argc, char *argv[])
 {
-    unsigned int size, threads; // Square matrix
+    unsigned int size; // Square matrix
     double *matrix, *original_matrix = NULL, *sol;
     clock_t start, end;
     double seconds;
 
     // Check if the required arguments are provided
-    if (argc != 3)
+    if (argc != 2)
     {
-        fprintf(stderr, "Usage: %s <size> <threads_per_block>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <size>\n", argv[0]);
         return 1;
     }
 
     if ((size = atoi(argv[1])) < 1)
     {
         fprintf(stderr, "Invalid size: %s\n", argv[1]);
-        return 1;
-    }
-
-    if ((threads = atoi(argv[2])) < 1)
-    {
-        fprintf(stderr, "Invalid threads per block: %s\n", argv[2]);
         return 1;
     }
 
@@ -76,7 +33,7 @@ int main(int argc, char *argv[])
     unsigned int i;
 
     start = clock();
-    solve_equation_with_gpu(size, threads, matrix, sol);
+    gauss_jordan(size, matrix);
     end = clock();
 
     // The solution is in the last column

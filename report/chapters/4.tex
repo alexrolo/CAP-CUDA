@@ -6,3 +6,19 @@
 \fancyfoot[R]{\fecha}
 
 \section{Conclusiones} \label{sec:5}
+El desarrollo de esta sesión de prácticas de laboratorio ha permitido analizar y comprender la enorme diferencia de rendimiento 
+entre las implementaciones en CPU y GPU para tareas de cómputo intensivo, como lo son el producto matricial y la resolución 
+de sistemas de ecuaciones lineales mediante el método de Gauss Jordan. Debe recalcarse que este rendimiento es muy notable 
+en problemas que permiten una paralelización eficiente, lo que aprovecha al máximo la arquitectura de la GPU.
+
+En el caso del producto matricial, la GPU ofrece una mejora de rendimiento muy significativa, incluso frente a la major implementación 
+del problema en CPU (\zorder). Este hecho demuestra que, incluso con configuraciones poco óptimas (como es el uso de un sólo 
+\textit{thread per block}), la GPU supera ampliamente a la CPU, confirmando que este tipo de cómputo intensivo se beneficia 
+enormemente de la paralelización masiva. \\
+Asimismo, se ha comprobado que la sobrecarga asociada a la reserva de memoria y la transferencia de datos entre CPUC y GPU es 
+despreciable para los tamaños de matriz utilizados. Esto demuestra que el uso de la GPU es muy ventajoso.
+Otro aspecto a destacar es la escalabilidad del enfoque. Mientras que la CPU sigue una tendencia exponencial del tiempo de 
+ejecución, la GPU mantiene una relación mucho más contenida y predecible a medida que aumenta el tamaño de los datos. Esto 
+reafirma su utilidad no sólo para fines académicos, sino también para escenarios reales en ciencia de datos, simulación numérica
+y aprendizaje automático, donde las matrices de gran tamaño son la norma.
+

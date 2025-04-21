@@ -27,3 +27,14 @@ Todo el código fuente se encuentra disponible públicamente en el siguiente
 \href{https://github.com/alexrolo/CAP-CUDA}{repositorio de GitHub}, así como en el archivo \textit{zip} asociado a esta entrega.
 
 \subsection{\textit{Benchmarking}}
+Con fines de realizar análisis de rendimiento, se han implementado \textit{benchmarks} para simplificar la ejecución y la toma 
+de tiempos con diferentes configuraciones y datos de entrada en ambos problemas.
+
+Respecto al producto matricial, se ha implementado un programa en C/CUDA (\textit{cuda\_mul\_benchmark.cu}) para cumplir con el 
+propósito anterior. Este programa permite la ejecución del producto de matrices de tamaño $N \times N$ con diferentes configuraciones
+de \textit{threads per block}. Además, se define un número de iteraciones para cada operación a realizar, de forma que se pueda 
+obtener un tiempo medio de ejecución de todas ellas, minimizando así el impacto de la variabilidad en el rendimiento.
+De forma sencilla, modificando una simple variable (\textit{ONLY\_KERNEL\_TIME}), se puede elegir si se desea medir el tiempo 
+de ejecución del \textit{kernel} únicamente o si se desea incluir el tiempo de reserva de memoria y el tiempo de copia de resultados.
+El programa devuelve un \textit{log} en formato CSV con los resultados obtenidos.
+
